@@ -3,20 +3,20 @@ import SwiftUI
 struct TimerView: View {
     @State private var remainingTime = 300 // 5 minutes in seconds
     @State private var isRunning = false
+    @State private var theme: TimerTheme = .nature // Default theme
+    @State private var guidedSession: GuidedSession = .mindfulness // Default session type
 
     var body: some View {
         ZStack {
-            // Gradient background
-            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .top, endPoint: .bottom)
-                .edgesIgnoringSafeArea(.all)
+            theme.background // Use theme-specific gradient background
 
             VStack {
-                Text("Zen Timer")
+                Text("Zen Timer Pro")
                     .font(.largeTitle)
                     .foregroundColor(.white)
 
                 Circle()
-                    .trim(from: 0, to: CGFloat(remainingTime) / 300) // Adjust for your desired duration
+                    .trim(from: 0, to: CGFloat(remainingTime) / 300)
                     .stroke(Color.white, lineWidth: 10)
                     .frame(width: 150, height: 150)
                     .rotationEffect(.degrees(-90))
@@ -42,13 +42,33 @@ struct TimerView: View {
                     remainingTime -= 1
                 } else {
                     // Timer completed
-                    // Play chime sound
+                    // Play selected chime sound
                     // Save session history
                     isRunning = false
                 }
             }
         }
     }
+}
+
+enum TimerTheme {
+    case nature, cosmic, minimal
+
+    var background: LinearGradient {
+        switch self {
+        case .nature:
+            return LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: .top, endPoint: .bottom)
+        case .cosmic:
+            return LinearGradient(gradient: Gradient(colors: [Color.black, Color.purple]), startPoint: .top, endPoint: .bottom)
+        case .minimal:
+            return LinearGradient(gradient: Gradient(colors: [Color.white, Color.gray]), startPoint: .top, endPoint: .bottom)
+        }
+    }
+}
+
+enum GuidedSession {
+    case mindfulness, lovingKindness, bodyScan
+   
 }
 
 struct TimerView_Previews: PreviewProvider {
